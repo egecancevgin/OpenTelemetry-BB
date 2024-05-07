@@ -1,0 +1,28 @@
+version: "3.9"
+
+# Invalid property at the top level
+# Should be indented under a service definition
+
+property_level_error: "invalid value"
+
+services:
+  # Correct property placement
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "9411:9411"  # Jaeger UI için
+      - "16686:16686" # Jaeger gRPC için
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+      - COLLECTOR_GRPC_PORT=16686
+      - STORAGE_TYPE=memory
+      - STORAGE_SECRET_KEY=my-secret-key  # Güçlü bir anahtar kullanın!
+      - PROPAGATION=b3
+    volumes:
+      - jaeger-data:/data
+    logging:
+      driver: "json"
+      level: "INFO"
+
+volumes:
+  jaeger-data:
